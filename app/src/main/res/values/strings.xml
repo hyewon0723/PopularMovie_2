@@ -1,4 +1,21 @@
 <resources>
     <string name="app_name">Popular Movie Stage 1</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Sort Settings</string>
+    <string name="pref_sort_option_key">sorting_option</string>
+    <string name="pref_sort_option_default_value">popularity</string>
+    <string name="title_activity_settings">Sort Settings</string>
+    <string name="pref_title_sort_options">Select Sort Order</string>
+    <string name="pref_header_general">Select Sort Order</string>
+
+    <string-array name="pref_sort_option_keys">
+        <item>popularity</item>
+        <item>vote_average</item>
+    </string-array>
+
+    <string-array name="pref_sort_option_titles">
+        <item>Most Popular</item>
+        <item>Highest Rated</item>
+    </string-array>
+
+
 </resources>

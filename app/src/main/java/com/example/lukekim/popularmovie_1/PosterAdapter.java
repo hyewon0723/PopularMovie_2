@@ -9,33 +9,17 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 
 public class PosterAdapter extends BaseAdapter {
+    private Context context;
+    private ArrayList<String> posters;
 
-
-    private Context mContext;
-
-
-    public PosterAdapter(Context c) {
-        mContext = c;
+    public PosterAdapter(Context context) {
+        this.context = context;
+        posters = new ArrayList<String>();
     }
-
-
-    public int getCount() {
-        //return MainActivity.images.size();
-        return 4;
-    }
-
-
-    public Object getItem(int position) {
-        return null;
-    }
-
-
-    public long getItemId(int position) {
-        return 0;
-    }
-
 
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView poster;
@@ -45,12 +29,34 @@ public class PosterAdapter extends BaseAdapter {
         } else {
             poster = (ImageView) convertView;
         }
-        //poster.setImageResource(R.mipmap.poster);
+//        poster.setImageResource(R.mipmap.poster);
 
-        //Picasso.with(mContext).load(MainActivity.images.get(position)).into(poster);
-        Picasso.with(mContext).load(R.mipmap.poster).into(poster);
+        Picasso.with(context).load(posters.get(position)).into(poster);
+//        Picasso.with(context).load(R.mipmap.poster).into(poster);
         return poster;
     }
+
+    public int getCount() {
+        return posters.size();
+    }
+
+
+    public Object getItem(int position) {
+        return null;
+    }
+
+
+    public void addAll(ArrayList<String> images) {
+        posters.addAll(images);
+        notifyDataSetChanged();
+    }
+
+    public long getItemId(int position) {
+        return 0;
+    }
+
+
+
 
 }
 
