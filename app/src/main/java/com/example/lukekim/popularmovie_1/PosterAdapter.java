@@ -55,8 +55,5 @@ public class PosterAdapter extends BaseAdapter {
         return 0;
     }
 
-
-
-
 }
 

@@ -1,5 +1,6 @@
 package com.example.lukekim.popularmovie_1;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import org.json.JSONArray;
@@ -25,9 +27,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-/**
- * A placeholder fragment containing a simple view.
- */
+
 public class MainActivityFragment extends Fragment {
 
     private ArrayList<Movie> moviesList;
@@ -35,7 +35,26 @@ public class MainActivityFragment extends Fragment {
     private GridView gridview;
     private PosterAdapter posterAdapter;
     private String prev_SortOrder;
-
+    private MainActivity mainActivity;
+    final static String IMAGE_URL = "http://image.tmdb.org/t/p/";
+    final static String IMAGE_SIZE_185 = "w185";
+    final static String IMAGE_NOT_FOUND = "http://i.imgur.com/N9FgF7M.png";
+    private final String LOG_TAG =MainActivityFragment.class.getSimpleName();
+    DataPassListener mCallback;
+    public interface DataPassListener{
+        public void passData(Movie data);
+    }
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        // Make sure that container activity implement the callback interface
+        try {
+            mCallback = (DataPassListener)activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement DataPassListener");
+        }
+    }
     public MainActivityFragment() {
     }
 
@@ -45,6 +64,7 @@ public class MainActivityFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        mainActivity = (MainActivity) getActivity();
         if(savedInstanceState != null && savedInstanceState.containsKey("moviesList")) {
             moviesList = savedInstanceState.getParcelableArrayList("moviesList");
             posters = savedInstanceState.getStringArrayList("posters");
@@ -57,6 +77,7 @@ public class MainActivityFragment extends Fragment {
         }
         super.onCreate(savedInstanceState);
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -89,15 +110,17 @@ public class MainActivityFragment extends Fragment {
         gridview = (GridView) rootView.findViewById(R.id.grid_view);
         gridview.setNumColumns(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 3: 2);
         gridview.setAdapter(posterAdapter);
-//        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            public void onItemClick(AdapterView<?> parent, View v,
-//                                    int position, long id) {
-//                Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
-//                intent.putExtra("movie_id", moviesList.get(position).getId());
-//                intent.putExtra("movie_position", position);
-//                startActivity(intent);
-//            }
-//        });
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+//                Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
+                Log.v(LOG_TAG, "URL OnCreateView moviesList.get(position).getOverView: "+moviesList.get(position) + " getTitle() "+moviesList.get(position).getTitle());
+//                intent.putExtra("movie_obj", moviesList.get(position));
+//                getActivity().startActivity(intent);
+                mCallback.passData(moviesList.get(position));
+            }
+        });
+
         return rootView;
     }
 
@@ -112,11 +135,6 @@ public class MainActivityFragment extends Fragment {
     public class FetchMoviesTask extends AsyncTask<String, Void, String> {
 
         private final String LOG_TAG =FetchMoviesTask.class.getSimpleName();
-
-        final String IMAGE_URL = "http://image.tmdb.org/t/p/";
-        final String IMAGE_SIZE_185 = "w185";
-        final String IMAGE_NOT_FOUND = "http://i.imgur.com/N9FgF7M.png";
-
 
         @Override
         protected String doInBackground(String... params) {
@@ -190,6 +208,7 @@ public class MainActivityFragment extends Fragment {
         protected void onPostExecute(String response) {
             if (response != null) {
                 retrieveData(response);
+                mainActivity.getProgressBar().setVisibility(View.INVISIBLE);
             } else {
                 Log.v(LOG_TAG, "No Internet Conection! ");
             }
@@ -211,19 +230,15 @@ public class MainActivityFragment extends Fragment {
 
                         Movie movieItem = new Movie();
                         movieItem.setOverview(movie.getString("overview"));
-                        movieItem.setRelease_date(movie.getString("release_date"));
-                        movieItem.setPopularity(movie.getString("popularity"));
-                        movieItem.setVote_average(movie.getString("vote_average"));
-                        movieItem.setPoster_path(movie.getString("poster_path"));
+                        movieItem.setReleaseDate(movie.getString("release_date"));
+                        movieItem.setVoteAverage(movie.getString("vote_average"));
+                        movieItem.setPosterPath(movie.getString("poster_path"));
                         movieItem.setTitle(movie.getString("title"));
                         movieItem.setId(movie.getInt("id"));
-                        movieItem.setBackdrop_path(movie.getString("backdrop_path"));
-                        movieItem.setOriginal_title(movie.getString("original_title"));
-                        movieItem.setOriginal_language(movie.getString("original_language"));
 
                         if (movie.getString("poster_path") == "null") {
                             posters.add(IMAGE_NOT_FOUND);
-                            movieItem.setPoster_path(IMAGE_NOT_FOUND);
+                            movieItem.setPosterPath(IMAGE_NOT_FOUND);
                         } else {
                             posters.add(IMAGE_URL + IMAGE_SIZE_185 + movie.getString("poster_path"));
                         }

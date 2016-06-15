@@ -4,26 +4,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
-public class MainActivity extends AppCompatActivity {
-
+public class MainActivity extends AppCompatActivity implements MainActivityFragment.DataPassListener {
+    private ProgressBar bar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        bar = (ProgressBar) this.findViewById(R.id.progressBar);
+        bar.setVisibility(View.VISIBLE);
+    }
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+    public ProgressBar getProgressBar () {
+        return bar;
     }
 
     @Override
@@ -47,5 +47,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void passData(Movie data) {
+
+        Log.v("", "URL MainActivity movie.title() ###########  "+data + " data.getTitle() "+data.getTitle());
+        Intent intent=new Intent(this, DetailActivity.class);
+        intent.putExtra("movie", data);
+        startActivity(intent);
     }
 }
