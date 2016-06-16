@@ -2,7 +2,6 @@ package com.example.lukekim.popularmovie_1;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,17 +28,13 @@ public class DetailActivityFragment extends Fragment {
 
         Movie movie = detailActivity.getMovie();
 
-        Log.v(LOG_TAG, "URL DetailActivityFragment movie.getTitle() ###########  "+movie.getTitle());
-
         TextView movie_title = (TextView)rootView.findViewById(R.id.movie_title);
         TextView movie_year = (TextView)rootView.findViewById(R.id.movie_year);
         TextView movie_rate = (TextView)rootView.findViewById(R.id.movie_rating);
         ImageView movie_poster = (ImageView)rootView.findViewById(R.id.movie_poster);
         TextView movie_overview = (TextView)rootView.findViewById(R.id.movie_overview);
-        Log.v(LOG_TAG, "URL DetailActivity movie.getOriginal_title() ###########  "+movie);
-
-        movie_title.setText(movie.getTitle());
-        movie_year.setText( movie.getReleaseDate().substring(0,4));
+        movie_title.setText(movie.getOriginalTitle());
+        movie_year.setText( movie.getReleaseDate());
         movie_title.setVisibility(View.VISIBLE);
         movie_rate.setText(movie.getVoteAverage() + "/10");
         movie_overview.setText(movie.getOverview());

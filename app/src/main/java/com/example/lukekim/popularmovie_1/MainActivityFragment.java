@@ -1,6 +1,6 @@
 package com.example.lukekim.popularmovie_1;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -34,7 +34,6 @@ public class MainActivityFragment extends Fragment {
     private ArrayList<String> posters;
     private GridView gridview;
     private PosterAdapter posterAdapter;
-    private String prev_SortOrder;
     private MainActivity mainActivity;
     final static String IMAGE_URL = "http://image.tmdb.org/t/p/";
     final static String IMAGE_SIZE_185 = "w185";
@@ -45,21 +44,17 @@ public class MainActivityFragment extends Fragment {
         public void passData(Movie data);
     }
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         // Make sure that container activity implement the callback interface
         try {
-            mCallback = (DataPassListener)activity;
+            mCallback = (DataPassListener)context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
                     + " must implement DataPassListener");
         }
     }
     public MainActivityFragment() {
-    }
-
-    public ArrayList<String> getPosters() {
-        return posters;
     }
 
     @Override
@@ -86,21 +81,6 @@ public class MainActivityFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    public void onResume() {
-
-        SharedPreferences shared_Prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String sortingOption= shared_Prefs.getString(getString(R.string.pref_sort_option_key), getString(R.string.pref_sort_option_default_value));
-
-        if(!sortingOption.equals(prev_SortOrder)){
-            moviesList = new ArrayList<Movie>();
-            posters = new ArrayList<String>();
-            updateMovies();
-        }
-        prev_SortOrder = sortingOption;
-
-
-        super.onResume();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -113,10 +93,6 @@ public class MainActivityFragment extends Fragment {
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-//                Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
-                Log.v(LOG_TAG, "URL OnCreateView moviesList.get(position).getOverView: "+moviesList.get(position) + " getTitle() "+moviesList.get(position).getTitle());
-//                intent.putExtra("movie_obj", moviesList.get(position));
-//                getActivity().startActivity(intent);
                 mCallback.passData(moviesList.get(position));
             }
         });
@@ -142,21 +118,21 @@ public class MainActivityFragment extends Fragment {
             if (params.length == 0) {
                 return null;
             }
-            final String BASE_URL = "http://api.themoviedb.org/3/discover/movie";
+            final String BASE_URL = "http://api.themoviedb.org/3/movie/";
             final String KEY_PARAM = "api_key";
-            final String SORT_PARAM = "sort_by";
+            final String API_KEY = "ac4a7ebe43d27f86492ec2014ca66131";
+
 
             try {
-                Uri builtUri = Uri.parse(BASE_URL).buildUpon()
-                        .appendQueryParameter(SORT_PARAM, params[0] + ".desc")
-                        .appendQueryParameter(KEY_PARAM, "ac4a7ebe43d27f86492ec2014ca66131")
+                Uri builtUri = Uri.parse(BASE_URL+params[0]).buildUpon()
+                        .appendQueryParameter(KEY_PARAM, API_KEY)
                         .build();
                 HttpURLConnection urlConnection = null;
                 BufferedReader reader = null;
                 String response = null;
                 InputStream inputStream;
                 StringBuffer buffer;
-                Log.v(LOG_TAG, "URL Information: "+builtUri.toString());
+                //Log.v(LOG_TAG, "URL Information: "+builtUri.toString());
                 try {
 
                     URL url = new URL(builtUri.toString());
@@ -212,7 +188,6 @@ public class MainActivityFragment extends Fragment {
             } else {
                 Log.v(LOG_TAG, "No Internet Conection! ");
             }
-
         }
 
 
@@ -228,13 +203,8 @@ public class MainActivityFragment extends Fragment {
                     for (int i = 0; i < moviesArray.length(); i++) {
                         JSONObject movie = moviesArray.getJSONObject(i);
 
-                        Movie movieItem = new Movie();
-                        movieItem.setOverview(movie.getString("overview"));
-                        movieItem.setReleaseDate(movie.getString("release_date"));
-                        movieItem.setVoteAverage(movie.getString("vote_average"));
-                        movieItem.setPosterPath(movie.getString("poster_path"));
-                        movieItem.setTitle(movie.getString("title"));
-                        movieItem.setId(movie.getInt("id"));
+                        Movie movieItem = new Movie(movie.getString("overview"), movie.getString("release_date"), movie.getString("vote_average"),
+                                movie.getString("poster_path"), movie.getString("original_title"), movie.getInt("id"));
 
                         if (movie.getString("poster_path") == "null") {
                             posters.add(IMAGE_NOT_FOUND);

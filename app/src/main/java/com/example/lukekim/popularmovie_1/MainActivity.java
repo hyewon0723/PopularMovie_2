@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,8 +49,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
     }
 
     public void passData(Movie data) {
-
-        Log.v("", "URL MainActivity movie.title() ###########  "+data + " data.getTitle() "+data.getTitle());
         Intent intent=new Intent(this, DetailActivity.class);
         intent.putExtra("movie", data);
         startActivity(intent);

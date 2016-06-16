@@ -1,2 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<items version="2" />
+<items version="2" >
+
+    <item
+        jar="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="ec75036c3c52e451d0cde50a5aedaf5fd32354a0">
+        <dex dex="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-recyclerview-v7-23.4.0_8bfa3fcece6e100e4234705a613fc7a14a9ee1f0/classes.dex" />
+    </item>
+    <item
+        jar="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="67bd36ee9340ec7c254108936ad16b24bed160cc">
+        <dex dex="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-23.4.0_0b75a0d09e39e12c40c96fefca592f0cc1d3d325/classes.dex" />
+    </item>
+    <item
+        jar="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="c2c594cace5d83a3227b2b6e658ecbfd586d3ed9">
+        <dex dex="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-23.4.0_dfe708e987e640f13f445628a2c466b6c983cdd0/classes.dex" />
+    </item>
+    <item
+        jar="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/jars/libs/internal_impl-23.4.0.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="ea3c07504d2c8f4b13aa17c45c1b68ed9c1c3674">
+        <dex dex="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.4.0_01373db568d012120b29562772cc91493e25be9f/classes.dex" />
+    </item>
+    <item
+        jar="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="fc4869f8ead087ca459d6a33be35de4d5b67e814">
+        <dex dex="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_bde2bf008577000868fc49e2d00aba3fba7cb98d/classes.dex" />
+    </item>
+    <item
+        jar="/Users/lukekim/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.5.2/7446d06ec8d4f7ffcc53f1da37c95f200dcb9387/picasso-2.5.2.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
+        <dex dex="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/transforms/dex/debug/folders/1000/10/picasso-2.5.2_0ab3068d71df807affbd53c129c55fedd7b2125b/classes.dex" />
+    </item>
+    <item
+        jar="/Users/lukekim/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.4.0/support-annotations-23.4.0.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="ffbe55fdb2bb456b1485831706a9eac3300bb6b8">
+        <dex dex="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-23.4.0_25e83c0989fbfc4673d7f39278a6adf77c7a8052/classes.dex" />
+    </item>
+    <item
+        jar="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="6ae68c899c9d7773a32e03fefe04a3bcdcc632d6">
+        <dex dex="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_1bb6753051d71e7d9d54e43f1c71f92fb16407f0/classes.dex" />
+    </item>
+    <item
+        jar="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="de4db3785756bfb0915a9f59a9b3f2fea7407be4">
+        <dex dex="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-23.4.0_60435242dca622f7bd5880de1d87897f180bb3e1/classes.dex" />
+    </item>
+    <item
+        jar="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/exploded-aar/com.android.support/design/23.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="5326d9a850d491714fef8cbfaa9ea3416f0bf0d2">
+        <dex dex="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-design-23.4.0_a92cee8dd4ce69668558035fa78dfe0264ea5dad/classes.dex" />
+    </item>
+    <item
+        jar="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="548f06de403a9409f00554b3ee12a9fdea0e236c">
+        <dex dex="/Users/lukekim/Documents/workspace/android/PopularMovie_1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-23.4.0_8d3f3a5efe66e1ab653f8309b521ae620ed10713/classes.dex" />
+    </item>
+
+</items>

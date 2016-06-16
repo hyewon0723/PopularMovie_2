@@ -29,10 +29,9 @@ public class PosterAdapter extends BaseAdapter {
         } else {
             poster = (ImageView) convertView;
         }
-//        poster.setImageResource(R.mipmap.poster);
 
         Picasso.with(context).load(posters.get(position)).into(poster);
-//        Picasso.with(context).load(R.mipmap.poster).into(poster);
+
         return poster;
     }
 
