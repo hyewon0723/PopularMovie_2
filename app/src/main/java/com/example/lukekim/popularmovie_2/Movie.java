@@ -1,4 +1,4 @@
-package com.example.lukekim.popularmovie_1;
+package com.example.lukekim.popularmovie_2;
 
 /**
  * Created by lukekim on 6/13/16.

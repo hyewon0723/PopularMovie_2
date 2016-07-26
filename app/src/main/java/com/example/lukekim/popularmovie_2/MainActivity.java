@@ -1,4 +1,4 @@
-package com.example.lukekim.popularmovie_1;
+package com.example.lukekim.popularmovie_2;
 
 import android.content.Intent;
 import android.os.Bundle;

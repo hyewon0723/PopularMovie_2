@@ -1,4 +1,4 @@
-package com.example.lukekim.popularmovie_1;
+package com.example.lukekim.popularmovie_2;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
