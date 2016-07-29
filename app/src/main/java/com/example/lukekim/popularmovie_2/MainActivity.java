@@ -2,6 +2,7 @@ package com.example.lukekim.popularmovie_2;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -11,6 +12,10 @@ import android.widget.ProgressBar;
 
 public class MainActivity extends AppCompatActivity implements MainActivityFragment.DataPassListener {
     private ProgressBar bar;
+    private boolean mTwoPane;
+    private MainActivityFragment mFragment;
+    private static final String MOVIE_DETAIL_FRAGMENT_TAG = "MDFTAG";
+    private static final String MOVIE_LIST_FRAGMENT_TAG = "MLFTAG";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,6 +24,33 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         setSupportActionBar(toolbar);
         bar = (ProgressBar) this.findViewById(R.id.progressBar);
         bar.setVisibility(View.VISIBLE);
+
+        if (findViewById(R.id.container_detail) != null) {
+            mTwoPane = true;
+
+            mFragment = new MainActivityFragment();
+            DetailActivityFragment fragment = new DetailActivityFragment();
+            fragment.setTwoPane(mTwoPane);
+            if (savedInstanceState == null) {
+
+//                getSupportFragmentManager().beginTransaction()
+//                        .add(R.id.fragment_main_placeholder, mFragment, MOVIE_LIST_FRAGMENT_TAG)
+//                        .commit();
+
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.container_detail, fragment, MOVIE_DETAIL_FRAGMENT_TAG)
+                        .commit();
+            } else {
+                mFragment = (MainActivityFragment) getSupportFragmentManager()
+                        .findFragmentByTag(MOVIE_LIST_FRAGMENT_TAG);
+            }
+        } else {
+            mTwoPane = false;
+            getSupportActionBar().setElevation(0f);
+        }
+        if (mFragment != null) {
+            mFragment.setTwoPane(mTwoPane);
+        }
     }
 
     public ProgressBar getProgressBar () {
@@ -48,9 +80,28 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         return super.onOptionsItemSelected(item);
     }
 
-    public void passData(Movie data) {
-        Intent intent=new Intent(this, DetailActivity.class);
-        intent.putExtra("movie", data);
-        startActivity(intent);
+    public void itemSelected(Movie data) {
+
+        if (mTwoPane) {
+
+            DetailActivityFragment fragment = new DetailActivityFragment();
+            fragment.setTwoPane(mTwoPane);
+            Bundle args = new Bundle();
+            args.putParcelable("movie", data);
+            fragment.setArguments(args);
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+            transaction.replace(R.id.container_detail, fragment, MOVIE_DETAIL_FRAGMENT_TAG);
+            transaction.addToBackStack(null);
+
+            // Commit the transaction
+            transaction.commit();
+        }
+        else {
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.putExtra("movie", data);
+            startActivity(intent);
+        }
     }
 }

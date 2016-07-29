@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:id="@+id/container"
-    tools:context="com.example.lukekim.popularmovie_1.DetailActivity">
+    android:id="@+id/container_detail"
+    tools:context="com.example.lukekim.popularmovie_2.DetailActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
