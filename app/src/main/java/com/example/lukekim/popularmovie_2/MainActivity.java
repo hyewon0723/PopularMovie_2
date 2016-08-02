@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,32 +26,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         bar = (ProgressBar) this.findViewById(R.id.progressBar);
         bar.setVisibility(View.VISIBLE);
 
-        if (findViewById(R.id.container_detail) != null) {
-            mTwoPane = true;
+        mTwoPane = findViewById(R.id.container_detail) != null;
 
-            mFragment = new MainActivityFragment();
-            DetailActivityFragment fragment = new DetailActivityFragment();
-            fragment.setTwoPane(mTwoPane);
-            if (savedInstanceState == null) {
-
-//                getSupportFragmentManager().beginTransaction()
-//                        .add(R.id.fragment_main_placeholder, mFragment, MOVIE_LIST_FRAGMENT_TAG)
-//                        .commit();
-
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.container_detail, fragment, MOVIE_DETAIL_FRAGMENT_TAG)
-                        .commit();
-            } else {
-                mFragment = (MainActivityFragment) getSupportFragmentManager()
-                        .findFragmentByTag(MOVIE_LIST_FRAGMENT_TAG);
-            }
-        } else {
-            mTwoPane = false;
-            getSupportActionBar().setElevation(0f);
-        }
-        if (mFragment != null) {
-            mFragment.setTwoPane(mTwoPane);
-        }
     }
 
     public ProgressBar getProgressBar () {
@@ -81,13 +58,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
     }
 
     public void itemSelected(Movie data) {
-
+        Log.v("Luke", "MainActivity.itemSelected mTwoPane "+mTwoPane + " title: "+data.getOriginalTitle());
         if (mTwoPane) {
-
             DetailActivityFragment fragment = new DetailActivityFragment();
-            fragment.setTwoPane(mTwoPane);
             Bundle args = new Bundle();
-            args.putParcelable("movie", data);
+            args.putParcelable(DetailActivityFragment.ARG_MOVIE, data);
             fragment.setArguments(args);
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -100,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         }
         else {
             Intent intent = new Intent(this, DetailActivity.class);
-            intent.putExtra("movie", data);
+            intent.putExtra(DetailActivityFragment.ARG_MOVIE, data);
             startActivity(intent);
         }
     }

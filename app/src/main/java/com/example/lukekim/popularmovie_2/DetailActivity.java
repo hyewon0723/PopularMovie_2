@@ -1,18 +1,14 @@
 package com.example.lukekim.popularmovie_2;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 public class DetailActivity extends AppCompatActivity {
     private final String LOG_TAG =DetailActivity.class.getSimpleName();
-    Movie movie;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        Intent intent = getIntent();
-        movie =intent.getExtras().getParcelable("movie");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
@@ -20,10 +16,18 @@ public class DetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
+        Log.v("Luke", "DetailActivity.onCreate savedInstanceState "+savedInstanceState);
+        if (savedInstanceState == null) {
+            Bundle arguments = new Bundle();
+            arguments.putParcelable(DetailActivityFragment.ARG_MOVIE,
+                    getIntent().getParcelableExtra(DetailActivityFragment.ARG_MOVIE));
+            DetailActivityFragment fragment = new DetailActivityFragment();
+            fragment.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container_detail, fragment)
+                    .commit();
+        }
 
-    public Movie getMovie() {
-        return movie;
     }
 
 }

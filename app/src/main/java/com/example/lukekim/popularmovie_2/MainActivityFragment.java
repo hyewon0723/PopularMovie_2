@@ -39,7 +39,6 @@ public class MainActivityFragment extends Fragment {
     final static String IMAGE_SIZE_185 = "w185";
     final static String IMAGE_NOT_FOUND = "http://i.imgur.com/N9FgF7M.png";
     private final String LOG_TAG =MainActivityFragment.class.getSimpleName();
-    private boolean mTwoPane;
     DataPassListener mCallback;
     public interface DataPassListener{
         public void itemSelected(Movie data);
@@ -56,10 +55,6 @@ public class MainActivityFragment extends Fragment {
         }
     }
     public MainActivityFragment() {
-    }
-
-    public void setTwoPane(boolean mTwoPane) {
-        this.mTwoPane = mTwoPane;
     }
 
     @Override
