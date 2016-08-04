@@ -1,4 +1,4 @@
-package com.example.lukekim.popularmovie_2;
+package com.example.lukekim.popularmovie_2.data;
 
 /**
  * Created by lukekim on 6/13/16.
@@ -11,10 +11,8 @@ public class Movie implements Parcelable {
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
 
         public Movie createFromParcel(Parcel in) {
-
             return new Movie(in);
         }
-
         public Movie[] newArray(int size) {
             return new Movie[size];
         }
@@ -25,10 +23,6 @@ public class Movie implements Parcelable {
     private String voteAverage;
     private String releaseDate="";
     private int id;
-
-    public Movie() {
-
-    }
 
     // parcel construtor
     protected Movie(Parcel p) {
@@ -49,13 +43,8 @@ public class Movie implements Parcelable {
         this.id = id;
     }
 
-
     public String getReleaseDate() {
         return releaseDate;
-    }
-
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
     }
 
     public int getId() {
@@ -70,10 +59,6 @@ public class Movie implements Parcelable {
         return overview;
     }
 
-    public void setOverview(String overview) {
-        this.overview = overview;
-    }
-
     public String getPosterPath() {
         return posterPath;
     }
@@ -86,18 +71,9 @@ public class Movie implements Parcelable {
         return this.originalTitle;
     }
 
-    public void setOriginalTitleTitle(String title) {
-        this.originalTitle = title;
-    }
-
     public String getVoteAverage() {
         return voteAverage;
     }
-
-    public void setVoteAverage(String voteAvarage) {
-        this.voteAverage = voteAvarage;
-    }
-
 
     @Override
     public int describeContents() {

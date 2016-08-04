@@ -8,8 +8,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ProgressBar;
+
+import com.example.lukekim.popularmovie_2.data.Movie;
 
 public class MainActivity extends AppCompatActivity implements MainActivityFragment.DataPassListener {
     private ProgressBar bar;
@@ -23,15 +24,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        bar = (ProgressBar) this.findViewById(R.id.progressBar);
-        bar.setVisibility(View.VISIBLE);
 
         mTwoPane = findViewById(R.id.container_detail) != null;
 
-    }
-
-    public ProgressBar getProgressBar () {
-        return bar;
     }
 
     @Override
