@@ -1,7 +1,11 @@
 package com.example.lukekim.popularmovie_2;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +27,9 @@ import java.util.ArrayList;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DetailActivityFragment extends Fragment implements FetchMovieDbTask.Listener {
+public class DetailActivityFragment extends Fragment implements FetchMovieDbTask.Listener, TrailerListAdapter.Callbacks{
+    private RecyclerView mRecyclerViewForTrailers;
+    private TrailerListAdapter mTrailerListAdapter;
     private final String LOG_TAG =DetailActivityFragment.class.getSimpleName();
     public static final String ARG_MOVIE = "movie";
     public static final String EXTRA_TRAILERS = "EXTRA_TRAILERS";
@@ -78,6 +84,15 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
                 }
                 Picasso.with(rootView.getContext()).load(movie_poster_url).into(movie_poster);
                 movie_poster.setVisibility(View.VISIBLE);
+                mRecyclerViewForTrailers = (RecyclerView)getActivity().findViewById(R.id.trailer_list);
+                LinearLayoutManager layoutManager
+                        = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                mRecyclerViewForTrailers.setLayoutManager(layoutManager);
+                mTrailerListAdapter = new TrailerListAdapter(new ArrayList<Trailer>(), this);
+                mRecyclerViewForTrailers.setAdapter(mTrailerListAdapter);
+                mRecyclerViewForTrailers.setNestedScrollingEnabled(false);
+
+
             }
 
 
@@ -89,6 +104,10 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
     }
     private void fetchReview() {
         new FetchMovieDbTask(this).execute(Integer.toString(mMovie.getId()), FetchMovieDbTask.MOVIE_REVIEW);
+    }
+
+    public void watch(Trailer trailer, int position) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(trailer.getTrailerUrl())));
     }
 
     @Override
@@ -134,6 +153,7 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
             }
 
             // add to traileradapter
+            mTrailerListAdapter.addAll(trailerList);
 
         } catch (JSONException e) {
             e.printStackTrace();

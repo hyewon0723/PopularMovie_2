@@ -17,7 +17,6 @@ import com.example.lukekim.popularmovie_2.data.Trailer;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class TrailerListAdapter extends RecyclerView.Adapter<TrailerListAdapter.ViewHolder> {
@@ -91,12 +90,12 @@ public class TrailerListAdapter extends RecyclerView.Adapter<TrailerListAdapter.
 
         public ViewHolder(View view) {
             super(view);
-//            ButterKnife.bind(this, view);
             mView = view;
+            mThumbnailView = (ImageView)mView.findViewById(R.id.trailer_thumbnail);
         }
     }
 
-    public void addAll(List<Trailer> trailers) {
+    public void addAll(ArrayList<Trailer> trailers) {
         mTrailers.clear();
         mTrailers.addAll(trailers);
         notifyDataSetChanged();
