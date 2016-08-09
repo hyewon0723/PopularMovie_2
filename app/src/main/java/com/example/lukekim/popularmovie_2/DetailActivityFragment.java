@@ -4,13 +4,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.lukekim.popularmovie_2.data.Movie;
@@ -27,9 +28,11 @@ import java.util.ArrayList;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DetailActivityFragment extends Fragment implements FetchMovieDbTask.Listener, TrailerListAdapter.Callbacks{
-    private RecyclerView mRecyclerViewForTrailers;
+public class DetailActivityFragment extends Fragment implements FetchMovieDbTask.Listener, ReviewListAdapter.Callbacks {
+    private ListView mListViewForTrailers;
     private TrailerListAdapter mTrailerListAdapter;
+    private RecyclerView mReviewListViewForTrailers;
+    private ReviewListAdapter mReviewListAdapter;
     private final String LOG_TAG =DetailActivityFragment.class.getSimpleName();
     public static final String ARG_MOVIE = "movie";
     public static final String EXTRA_TRAILERS = "EXTRA_TRAILERS";
@@ -63,6 +66,7 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+
         Log.v("Luke", "DetailActivityFragment.onCreateView mMovie "+mMovie);
             if (mMovie != null) {
 
@@ -70,6 +74,7 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
                 TextView movie_year = (TextView)rootView.findViewById(R.id.movie_year);
                 TextView movie_rate = (TextView)rootView.findViewById(R.id.movie_rating);
                 ImageView movie_poster = (ImageView)rootView.findViewById(R.id.movie_poster);
+
                 TextView movie_overview = (TextView)rootView.findViewById(R.id.movie_overview);
                 movie_title.setText(mMovie.getOriginalTitle());
                 movie_year.setText( mMovie.getReleaseDate());
@@ -84,20 +89,32 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
                 }
                 Picasso.with(rootView.getContext()).load(movie_poster_url).into(movie_poster);
                 movie_poster.setVisibility(View.VISIBLE);
-                mRecyclerViewForTrailers = (RecyclerView)getActivity().findViewById(R.id.trailer_list);
-                LinearLayoutManager layoutManager
-                        = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-                mRecyclerViewForTrailers.setLayoutManager(layoutManager);
-                mTrailerListAdapter = new TrailerListAdapter(new ArrayList<Trailer>(), this);
-                mRecyclerViewForTrailers.setAdapter(mTrailerListAdapter);
-                mRecyclerViewForTrailers.setNestedScrollingEnabled(false);
+                mListViewForTrailers = (ListView) rootView.findViewById(R.id.trailer_list);
+                mTrailerListAdapter = new TrailerListAdapter(getActivity(), new ArrayList<Trailer>());
+                mListViewForTrailers.setAdapter(mTrailerListAdapter);
 
+                mListViewForTrailers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> parent, View v,
+                                            int position, long id) {
+                        Log.v("Luke", "mListViewForTrailer Clicked!!!!! position "+position);
+                        Trailer trailer = trailerList.get(position);
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(trailer.getTrailerUrl())));
+                    }
+                });
 
+                mReviewListViewForTrailers = (RecyclerView) rootView.findViewById(R.id.review_list);
+                mReviewListAdapter = new ReviewListAdapter(new ArrayList<Review>(), this);
+                mReviewListViewForTrailers.setAdapter(mReviewListAdapter);
             }
-
 
         return rootView;
     }
+
+    public void read(Review review, int position) {
+        startActivity(new Intent(Intent.ACTION_VIEW,
+                Uri.parse(review.getUrl())));
+    }
+
 
     private void fetchTrailer() {
         new FetchMovieDbTask(this).execute(Integer.toString(mMovie.getId()), FetchMovieDbTask.MOVIE_TRAILER);
@@ -106,9 +123,6 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
         new FetchMovieDbTask(this).execute(Integer.toString(mMovie.getId()), FetchMovieDbTask.MOVIE_REVIEW);
     }
 
-    public void watch(Trailer trailer, int position) {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(trailer.getTrailerUrl())));
-    }
 
     @Override
     public void onFetchFinished(String list, String type) {
@@ -120,6 +134,7 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
                 break;
             case FetchMovieDbTask.MOVIE_REVIEW:
                 Log.v("Luke", "DetailActivityFragment.onFetchFinished review "+list);
+                retrieveReviewData(list);
                 break;
         }
 
@@ -154,10 +169,47 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
 
             // add to traileradapter
             mTrailerListAdapter.addAll(trailerList);
+            ViewGroup.LayoutParams params = mListViewForTrailers.getLayoutParams();
+            params.height = 350 * mTrailerListAdapter.getCount();
+            mListViewForTrailers.setLayoutParams(params);
+            mListViewForTrailers.requestLayout();
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
+
+    private void retrieveReviewData(String str) {
+
+        final String REVIEW_ID = "id";
+        final String AUTHOR = "author";
+        final String CONTENT = "content";
+        final String URL = "url";
+        final String RESULTS_ARRAY = "results";
+
+        try {
+            JSONObject moviesJson = new JSONObject(str);
+
+            JSONArray moviesArray = moviesJson.getJSONArray(RESULTS_ARRAY);
+            reviewList = new ArrayList<Review>();
+
+            for (int i = 0; i < moviesArray.length(); i++) {
+                JSONObject reviewObject = moviesArray.getJSONObject(i);
+
+                Review review = new Review(reviewObject.getString(REVIEW_ID), reviewObject.getString(AUTHOR), reviewObject.getString(CONTENT),
+                        reviewObject.getString(URL));
+                Log.v("Luke", "DetailActivityFragment.retrieveReview Data Author: " + reviewObject.getString(AUTHOR));
+
+                reviewList.add(review);
+            }
+
+            // add to traileradapter
+            mReviewListAdapter.addAll(reviewList);;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
