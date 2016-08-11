@@ -3,9 +3,13 @@ package com.example.lukekim.popularmovie_2;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.example.lukekim.popularmovie_2.data.Movie;
+import com.example.lukekim.popularmovie_2.data.MovieContract;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,12 +27,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 
-public class MainActivityFragment extends Fragment implements FetchMovieDbTask.Listener {
+public class MainActivityFragment extends Fragment implements FetchMovieDbTask.Listener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private ArrayList<Movie> moviesList;
     private ArrayList<String> posters;
     private GridView gridview;
     private PosterAdapter posterAdapter;
+    private static final int FAVORITE_MOVIES_LOADER = 0;
     private MainActivity mainActivity;
     final static String IMAGE_URL = "http://image.tmdb.org/t/p/";
     final static String IMAGE_SIZE_185 = "w185";
@@ -97,10 +103,18 @@ public class MainActivityFragment extends Fragment implements FetchMovieDbTask.L
     }
 
     private void updateMovies() {
+        Log.v("Luke", "@@@@@@@@@@@@@@@MainActivtyFragmenet.onCreateView updateMovies isfavorite? !!!!!!!!!!!! ");
         SharedPreferences shared_prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sortingCriteria = shared_prefs.getString(getString(R.string.pref_sort_option_key), getString(R.string.pref_sort_option_default_value));
-        String prarms[] = {sortingCriteria};
-        new FetchMovieDbTask(this).execute(sortingCriteria, FetchMovieDbTask.MOVIE_POSTER);
+        Log.v("Luke", "@@@@@@@@@@@@@@@MainActivtyFragmenet.onCreateView updateMovies isfavorite? !!!!!!!!!!!! (sortingCriteria.equals(\"favorites\")) "+(sortingCriteria.equals("favorites")));
+        if (sortingCriteria.equals("favorites")) {
+            getActivity().getSupportLoaderManager().initLoader(FAVORITE_MOVIES_LOADER, null, this);
+        }
+        else {
+            String prarms[] = {sortingCriteria};
+            new FetchMovieDbTask(this).execute(sortingCriteria, FetchMovieDbTask.MOVIE_POSTER);
+        }
+
     }
 
 
@@ -110,6 +124,36 @@ public class MainActivityFragment extends Fragment implements FetchMovieDbTask.L
         }
     }
 
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        posters.clear();
+        moviesList.clear();
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                Movie movieItem = new Movie(cursor.getString(MovieContract.MovieEntry.COL_MOVIE_OVERVIEW), cursor.getString(MovieContract.MovieEntry.COL_MOVIE_RELEASE_DATE), cursor.getString(MovieContract.MovieEntry.COL_MOVIE_VOTE_AVERAGE),
+                        cursor.getString(MovieContract.MovieEntry.COL_MOVIE_POSTER_PATH), cursor.getString(MovieContract.MovieEntry.COL_MOVIE_TITLE), cursor.getInt(MovieContract.MovieEntry.COL_MOVIE_ID));
+                posters.add(IMAGE_URL + IMAGE_SIZE_185 + cursor.getString(MovieContract.MovieEntry.COL_MOVIE_POSTER_PATH));
+                moviesList.add(movieItem);
+            } while (cursor.moveToNext());
+        }
+
+        posterAdapter.addAll(posters);
+
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        return new CursorLoader(getActivity(),
+                MovieContract.MovieEntry.CONTENT_URI,
+                MovieContract.MovieEntry.MOVIE_COLUMNS,
+                null,
+                null,
+                null);
+    }
+
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+    }
 
     public void retrieveData (String jsonString) {
         posters.clear();

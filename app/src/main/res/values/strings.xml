@@ -10,11 +10,13 @@
     <string-array name="pref_sort_option_keys">
         <item>popular</item>
         <item>top_rated</item>
+        <item>favorites</item>
     </string-array>
 
     <string-array name="pref_sort_option_titles">
         <item>Most Popular</item>
         <item>Highest Rated</item>
+        <item>Favorite Movie</item>
     </string-array>
     <string name="title_activity_detail">DetailActivity</string>
 

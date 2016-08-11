@@ -25,7 +25,6 @@ public class MovieContract {
         public static final String COLUMN_MOVIE_OVERVIEW = "overview";
         public static final String COLUMN_MOVIE_VOTE_AVERAGE = "vote_average";
         public static final String COLUMN_MOVIE_RELEASE_DATE = "release_date";
-        public static final String COLUMN_MOVIE_BACKDROP_PATH = "backdrop_path";
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIE).build();
@@ -46,7 +45,6 @@ public class MovieContract {
                 COLUMN_MOVIE_OVERVIEW,
                 COLUMN_MOVIE_VOTE_AVERAGE,
                 COLUMN_MOVIE_RELEASE_DATE,
-                COLUMN_MOVIE_BACKDROP_PATH
         };
 
         public static final int COL_MOVIE_ID = 0;
@@ -55,6 +53,5 @@ public class MovieContract {
         public static final int COL_MOVIE_OVERVIEW = 3;
         public static final int COL_MOVIE_VOTE_AVERAGE = 4;
         public static final int COL_MOVIE_RELEASE_DATE = 5;
-        public static final int COL_MOVIE_BACKDROP_PATH = 6;
     }
 }

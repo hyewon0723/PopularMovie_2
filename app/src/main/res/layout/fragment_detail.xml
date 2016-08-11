@@ -48,6 +48,7 @@
                 android:visibility="visible"
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="15dp" />
+
         </LinearLayout>
 
 
@@ -62,20 +63,28 @@
                 android:layout_height="200dp"
                 android:id="@+id/movie_poster"
                 android:visibility="visible" />
+            <ImageButton
+                android:id="@+id/button_favorite"
+                android:src="@drawable/favorites_add"
+                android:layout_marginLeft="15dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp" />
+
         </LinearLayout>
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/movie_overview"
                 android:visibility="visible" />
+
             <ListView
                 android:id="@+id/trailer_list"
                 android:layout_width="match_parent"
@@ -83,16 +92,15 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
                 android:fastScrollEnabled="false"/>
 
             <android.support.v7.widget.RecyclerView
             android:id="@+id/review_list"
-            android:layout_marginTop="-100dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layoutManager="LinearLayoutManager"
             tools:listitem="@layout/review_list_content" />
-
 
         </LinearLayout>
 
