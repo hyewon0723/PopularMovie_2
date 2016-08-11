@@ -8,8 +8,6 @@ import android.os.Parcelable;
  */
 public class Trailer implements Parcelable {
 
-    public static final String LOG_TAG = Trailer.class.getSimpleName();
-
     private String mId;
     private String mKey;
     private String mName;
@@ -45,18 +43,6 @@ public class Trailer implements Parcelable {
         return mName;
     }
 
-    public String getKey() {
-        return mKey;
-    }
-
-    public String getTrailerUrl() {
-        return "http://www.youtube.com/watch?v=" + mKey;
-    }
-
-
-    public int describeContents() {
-        return 0;
-    }
 
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(mId);
@@ -64,5 +50,17 @@ public class Trailer implements Parcelable {
         parcel.writeString(mName);
         parcel.writeString(mSite);
         parcel.writeString(mSize);
+    }
+
+    public int describeContents() {
+        return 0;
+    }
+
+    public String getKey() {
+        return mKey;
+    }
+
+    public String getTrailerUrl() {
+        return "http://www.youtube.com/watch?v=" + mKey;
     }
 }

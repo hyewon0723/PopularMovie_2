@@ -23,17 +23,6 @@ public class Review implements Parcelable {
         }
     };
 
-    public String getContent() {
-        return mContent;
-    }
-
-    public String getAuthor() {
-        return mAuthor;
-    }
-
-    public String getUrl() {
-        return mUrl;
-    }
 
     public Review(Parcel in) {
         this.mId = in.readString();
@@ -49,8 +38,17 @@ public class Review implements Parcelable {
         this.mUrl = mUrl;
     }
 
+    public String getContent() {
+        return mContent;
+    }
 
+    public String getAuthor() {
+        return mAuthor;
+    }
 
+    public String getUrl() {
+        return mUrl;
+    }
 
     public int describeContents() {
         return 0;

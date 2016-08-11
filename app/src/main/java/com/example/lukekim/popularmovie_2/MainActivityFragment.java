@@ -34,11 +34,12 @@ public class MainActivityFragment extends Fragment implements FetchMovieDbTask.L
     private GridView gridview;
     private PosterAdapter posterAdapter;
     private static final int FAVORITE_MOVIES_LOADER = 0;
-    private MainActivity mainActivity;
     final static String IMAGE_URL = "http://image.tmdb.org/t/p/";
     final static String IMAGE_SIZE_185 = "w185";
     final static String IMAGE_NOT_FOUND = "http://i.imgur.com/N9FgF7M.png";
-    private final String LOG_TAG =MainActivityFragment.class.getSimpleName();
+    public static final String ARG_MOVIELIST = "moviesList";
+    public static final String ARG_POSTER = "posters";
+
     DataPassListener mCallback;
     public interface DataPassListener{
         public void itemSelected(Movie data);
@@ -59,12 +60,11 @@ public class MainActivityFragment extends Fragment implements FetchMovieDbTask.L
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        mainActivity = (MainActivity) getActivity();
         posterAdapter = new PosterAdapter(getActivity());
         Log.v("Luke", "MainActivtyFragmenet.onCreateView savedInstanceState "+savedInstanceState);
-        if(savedInstanceState != null && savedInstanceState.containsKey("moviesList")) {
-            moviesList = savedInstanceState.getParcelableArrayList("moviesList");
-            posters = savedInstanceState.getStringArrayList("posters");
+        if(savedInstanceState != null && savedInstanceState.containsKey(ARG_MOVIELIST)) {
+            moviesList = savedInstanceState.getParcelableArrayList(ARG_MOVIELIST);
+            posters = savedInstanceState.getStringArrayList(ARG_POSTER);
             posterAdapter.addAll(posters);
         }
         else {
@@ -78,8 +78,8 @@ public class MainActivityFragment extends Fragment implements FetchMovieDbTask.L
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList("moviesList", moviesList);
-        outState.putStringArrayList("posters", posters);
+        outState.putParcelableArrayList(ARG_MOVIELIST, moviesList);
+        outState.putStringArrayList(ARG_POSTER, posters);
         super.onSaveInstanceState(outState);
     }
 
@@ -103,18 +103,15 @@ public class MainActivityFragment extends Fragment implements FetchMovieDbTask.L
     }
 
     private void updateMovies() {
-        Log.v("Luke", "@@@@@@@@@@@@@@@MainActivtyFragmenet.onCreateView updateMovies isfavorite? !!!!!!!!!!!! ");
+
         SharedPreferences shared_prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sortingCriteria = shared_prefs.getString(getString(R.string.pref_sort_option_key), getString(R.string.pref_sort_option_default_value));
-        Log.v("Luke", "@@@@@@@@@@@@@@@MainActivtyFragmenet.onCreateView updateMovies isfavorite? !!!!!!!!!!!! (sortingCriteria.equals(\"favorites\")) "+(sortingCriteria.equals("favorites")));
         if (sortingCriteria.equals("favorites")) {
             getActivity().getSupportLoaderManager().initLoader(FAVORITE_MOVIES_LOADER, null, this);
         }
         else {
-            String prarms[] = {sortingCriteria};
             new FetchMovieDbTask(this).execute(sortingCriteria, FetchMovieDbTask.MOVIE_POSTER);
         }
-
     }
 
 
@@ -187,7 +184,4 @@ public class MainActivityFragment extends Fragment implements FetchMovieDbTask.L
             e.printStackTrace();
         }
     }
-
-
-
 }

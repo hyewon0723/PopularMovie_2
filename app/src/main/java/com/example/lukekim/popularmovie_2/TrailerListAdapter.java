@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 public class TrailerListAdapter extends ArrayAdapter<Trailer> {
 
-    private final static String LOG_TAG = TrailerListAdapter.class.getSimpleName();
     private final Context context;
     private final ArrayList<Trailer> mTrailers;
     ImageView mThumbnailView;

@@ -16,8 +16,6 @@ import java.util.List;
  */
 public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.ViewHolder> {
 
-    private final static String LOG_TAG = ReviewListAdapter.class.getSimpleName();
-
     private final ArrayList<Review> mReviews;
     private final Callbacks mCallbacks;
 
@@ -27,7 +25,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     }
 
     public interface Callbacks {
-        void read(Review review, int position);
+        void readReview(Review review, int position);
     }
 
     @Override
@@ -42,13 +40,13 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         final Review review = mReviews.get(position);
 
         holder.mReview = review;
-        holder.mContentView.setText(review.getContent());
         holder.mAuthorView.setText(review.getAuthor());
+        holder.mContentView.setText(review.getContent());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallbacks.read(review, holder.getAdapterPosition());
+                mCallbacks.readReview(review, holder.getAdapterPosition());
             }
         });
     }

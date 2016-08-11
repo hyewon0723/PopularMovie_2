@@ -39,20 +39,19 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
     private TrailerListAdapter mTrailerListAdapter;
     private RecyclerView mReviewListViewForTrailers;
     private ReviewListAdapter mReviewListAdapter;
-    private final String LOG_TAG =DetailActivityFragment.class.getSimpleName();
     public static final String ARG_MOVIE = "movie";
-    public static final String EXTRA_TRAILERS = "EXTRA_TRAILERS";
-    public static final String EXTRA_REVIEWS = "EXTRA_REVIEWS";
+    public static final String ARG_TRAILERS = "trailers";
+    public static final String ARG_REVIEWS = "reviews";
     private ArrayList<Review> reviewList;
     private ArrayList<Trailer> trailerList;
     Movie mMovie;
+
     public DetailActivityFragment() {
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
-//        Log.v("Luke", "DetailActivityFragment.onCreate getArguments()" +getArguments());
 
         if (arguments != null && arguments.containsKey(ARG_MOVIE)) {
             mMovie = getArguments().getParcelable(ARG_MOVIE);
@@ -63,17 +62,20 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
 
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.v("Luke", "DetailActivityFragment.onSaveInstanceState "+mTrailerListAdapter);
-        ArrayList<Trailer> trailers = mTrailerListAdapter.getTrailers();
-        if (trailers != null) {
-            Log.v("Luke", "DetailActivityFragment.onSaveInstanceState trailers.size() "+trailers.size());
-            outState.putParcelableArrayList(EXTRA_TRAILERS, trailers);
+        if(mTrailerListAdapter != null) {
+            ArrayList<Trailer> trailers = mTrailerListAdapter.getTrailers();
+            if (trailers != null) {
+                outState.putParcelableArrayList(ARG_TRAILERS, trailers);
+            }
         }
 
-        ArrayList<Review> reviews = mReviewListAdapter.getReviews();
-        if (reviews != null) {
-            outState.putParcelableArrayList(EXTRA_REVIEWS, reviews);
+        if(mReviewListAdapter != null) {
+            ArrayList<Review> reviews = mReviewListAdapter.getReviews();
+            if (reviews != null) {
+                outState.putParcelableArrayList(ARG_REVIEWS, reviews);
+            }
         }
+
     }
 
 
@@ -82,8 +84,6 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-//        Log.v("Luke", "DetailActivityFragment.onCreateView mMovie !!!!!!!!!!!!!!!!!!! LOOKOUT@@@ "+mMovie);
-
 
             if (mMovie != null) {
                 TextView movie_title = (TextView)rootView.findViewById(R.id.movie_title);
@@ -98,13 +98,17 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
                 movie_rate.setText(mMovie.getVoteAverage() + "/10");
                 movie_overview.setText(mMovie.getOverview());
                 String movie_poster_url;
+
                 if (mMovie.getPosterPath() == MainActivityFragment.IMAGE_NOT_FOUND) {
                     movie_poster_url = MainActivityFragment.IMAGE_NOT_FOUND;
                 }else {
                     movie_poster_url = MainActivityFragment.IMAGE_URL + MainActivityFragment.IMAGE_SIZE_185 + "/" + mMovie.getPosterPath();
                 }
+
                 Picasso.with(rootView.getContext()).load(movie_poster_url).into(movie_poster);
                 movie_poster.setVisibility(View.VISIBLE);
+
+                //Trailer Adapter in ListView
                 mListViewForTrailers = (ListView) rootView.findViewById(R.id.trailer_list);
                 mTrailerListAdapter = new TrailerListAdapter(getActivity(), new ArrayList<Trailer>());
                 mListViewForTrailers.setAdapter(mTrailerListAdapter);
@@ -112,15 +116,17 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
                 mListViewForTrailers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     public void onItemClick(AdapterView<?> parent, View v,
                                             int position, long id) {
-//                        Log.v("Luke", "mListViewForTrailer Clicked!!!!! position "+position);
                         Trailer trailer = trailerList.get(position);
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(trailer.getTrailerUrl())));
                     }
                 });
 
+                //Review Adapter in Recycler View
                 mReviewListViewForTrailers = (RecyclerView) rootView.findViewById(R.id.review_list);
                 mReviewListAdapter = new ReviewListAdapter(new ArrayList<Review>(), this);
                 mReviewListViewForTrailers.setAdapter(mReviewListAdapter);
+
+                //Handing Favoite image button
                 mFavoriteButton = (ImageButton) rootView.findViewById(R.id.button_favorite);
                 if (isFavoriteMovie()) {
                     mFavoriteButton.setImageResource(R.drawable.favorites);
@@ -133,19 +139,25 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
                             }
                         });
 
-                if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_TRAILERS)) {
-                    trailerList = savedInstanceState.getParcelableArrayList(EXTRA_TRAILERS);
+                //Handling saveInstance for trailer and review
+                if (savedInstanceState != null && savedInstanceState.containsKey(ARG_TRAILERS)) {
+                    trailerList = savedInstanceState.getParcelableArrayList(ARG_TRAILERS);
                     mTrailerListAdapter.addAll(trailerList);
                     ViewGroup.LayoutParams params = mListViewForTrailers.getLayoutParams();
-                    params.height = 350 * mTrailerListAdapter.getCount();
+                    if (getActivity().findViewById(R.id.grid_view) == null) {
+                        params.height = 350 * mTrailerListAdapter.getCount();
+                    }
+                    else {
+                        params.height = 150 * mTrailerListAdapter.getCount();
+                    }
                     mListViewForTrailers.setLayoutParams(params);
                     mListViewForTrailers.requestLayout();
                 } else {
                     fetchTrailer();
                 }
 
-                if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_REVIEWS)) {
-                    reviewList = savedInstanceState.getParcelableArrayList(EXTRA_REVIEWS);
+                if (savedInstanceState != null && savedInstanceState.containsKey(ARG_REVIEWS)) {
+                    reviewList = savedInstanceState.getParcelableArrayList(ARG_REVIEWS);
                     mReviewListAdapter.addAll(reviewList);
                 } else {
                     fetchReview();
@@ -208,7 +220,7 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
     }
 
 
-    public void read(Review review, int position) {
+    public void readReview(Review review, int position) {
         startActivity(new Intent(Intent.ACTION_VIEW,
                 Uri.parse(review.getUrl())));
     }
@@ -227,11 +239,9 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
 
         switch (type) {
             case FetchMovieDbTask.MOVIE_TRAILER:
-//                Log.v("Luke", "DetailActivityFragment.onFetchFinished trailer "+list);
                 retrieveTrailersData(list);
                 break;
             case FetchMovieDbTask.MOVIE_REVIEW:
-//                Log.v("Luke", "DetailActivityFragment.onFetchFinished review "+list);
                 retrieveReviewData(list);
                 break;
         }
@@ -241,7 +251,6 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
 
     private void retrieveTrailersData(String str){
 
-        final String MOVIE_ID = "id";
         final String RESULTS_ARRAY = "results";
         final String TRAILER_ID = "id";
         final String KEY = "key";
@@ -260,7 +269,6 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
 
                 Trailer trailer = new Trailer(trailerObject.getString(TRAILER_ID), trailerObject.getString(KEY), trailerObject.getString(NAME),
                         trailerObject.getString(SITE), trailerObject.getString(SIZE));
-//                Log.v("Luke", "DetailActivityFragment.retrieveTrailersData trailer KEY: "+trailerObject.getString(KEY));
 
                 trailerList.add(trailer);
             }
@@ -268,7 +276,13 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
             // add to traileradapter
             mTrailerListAdapter.addAll(trailerList);
             ViewGroup.LayoutParams params = mListViewForTrailers.getLayoutParams();
-            params.height = 350 * mTrailerListAdapter.getCount();
+            if (getActivity().findViewById(R.id.grid_view) == null) {
+                params.height = 350 * mTrailerListAdapter.getCount();
+            }
+            else {
+                params.height = 150 * mTrailerListAdapter.getCount();
+            }
+
             mListViewForTrailers.setLayoutParams(params);
             mListViewForTrailers.requestLayout();
 
@@ -296,7 +310,6 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDbTask
 
                 Review review = new Review(reviewObject.getString(REVIEW_ID), reviewObject.getString(AUTHOR), reviewObject.getString(CONTENT),
                         reviewObject.getString(URL));
-//                Log.v("Luke", "DetailActivityFragment.retrieveReview Data Author: " + reviewObject.getString(AUTHOR));
 
                 reviewList.add(review);
             }

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
@@ -17,7 +16,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
     private boolean mTwoPane;
     private MainActivityFragment mFragment;
     private static final String MOVIE_DETAIL_FRAGMENT_TAG = "MDFTAG";
-    private static final String MOVIE_LIST_FRAGMENT_TAG = "MLFTAG";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
     }
 
     public void itemSelected(Movie data) {
-        Log.v("Luke", "MainActivity.itemSelected mTwoPane "+mTwoPane + " title: "+data.getOriginalTitle());
         if (mTwoPane) {
             DetailActivityFragment fragment = new DetailActivityFragment();
             Bundle args = new Bundle();
